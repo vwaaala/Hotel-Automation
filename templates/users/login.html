@@ -1,0 +1,67 @@
+{% extends 'layouts/master.portfolio.html' %}
+{% block title %}
+    Login
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <form class="form-control" method="post" action="">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Email</label>
+                    <input type="email" class="form-control" name="username" id="username">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" id="password">
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="privacyCheck">
+                    <label class="form-check-label" for="privacyCheck">Remember me</label>
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Sign in</button>
+                    <a href="{% url 'users:guest-create' %}">Dont have an account? Join us!</a>
+                </div>
+
+            </form>
+        </div>
+        <div class="row">
+            <table class="table table-bordered border-primary">
+                <thead>
+                <tr>
+                    <th scope="col">Role</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Password</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr id="manager">
+                    <td>Manager</td>
+                    <td id="managerEmail">manager@iraboti.com</td>
+                    <td id="managerPassword">manager@iraboti.com</td>
+                </tr>
+                <tr id="guest">
+                    <td>Guest</td>
+                    <td id="guestEmail">guest@iraboti.com</td>
+                    <td id="guestPassword">guest@iraboti.com</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $("#manager").click(function (){
+                $("#username").val($("#managerEmail").text())
+                $("#password").val($("#managerPassword").text())
+            })
+            $("#guest").click(function (){
+                $("#username").val($("#guestEmail").text())
+                $("#password").val($("#guestPassword").text())
+            })
+        });
+    </script>
+{% endblock %}

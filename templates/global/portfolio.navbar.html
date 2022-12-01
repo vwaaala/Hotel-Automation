@@ -1,0 +1,96 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'portfolio:home' %}">Iraboti</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %} " aria-current="page" href=
+                            "{% url 'portfolio:home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/booking' %}active{% endif %}" href=
+                            "{% url 'portfolio:booking' %}">Booking</a>
+                </li>
+                <li class="nav-item">
+                    <a 
+                            class="nav-link {% if request.path == '/services' %}active{% endif %} "
+                            href="{% url 'portfolio:services' %}"
+                    >
+                        Services
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a 
+                            class="nav-link {% if request.path == '/find-us' %}active{% endif %}"
+                            href="{% url 'portfolio:find-us' %}"
+                    >
+                        Find us
+                    </a>
+                </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        My Account
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li>
+                            <a class="dropdown-item {% if request.path == '/guest/' %}active{% endif %}"
+                               href="{% url 'guest:dashboard' %}"
+                            >
+                                Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a 
+                                    class="dropdown-item {% if request.path == '/guest/message' %}active{% endif %}"
+                                    href="{% url 'guest:message' %}"
+                            >
+                                Message
+                            </a>
+                        </li>
+                        <li>
+                            <a 
+                                    class="dropdown-item {% if request.path == '/guest/my-booking' %}active{% endif %}"
+                                    href="{% url 'guest:my-booking' %}"
+                            >
+                                My Booking
+                            </a>
+                        </li>
+                        <li>
+                            <a 
+                                    class="dropdown-item {% if request.path == '/guest/profile' %}active{% endif %}" 
+                                    href="{% url 'guest:profile' %}"
+                            >
+                                Profile
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'users:logout' %}">Logout</a></li>
+                    </ul>
+                </li>
+                    {% else %}
+                    
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/user/login' %}active{% endif %}" href=
+                            "{% url 'users:login' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a 
+                            class="nav-link {% if request.path == '/user/register' %}active{% endif %}"
+                            href="{% url 'users:guest-create' %}"
+                    >
+                        Become a Guest
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

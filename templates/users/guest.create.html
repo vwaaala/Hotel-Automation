@@ -1,0 +1,57 @@
+{% extends 'layouts/master.portfolio.html' %}
+{% block title %}
+    Guest register
+{% endblock %}
+{% block content %}
+    <div class="container mb-50">
+        <form class="form-control" method="post" action="">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="first_name" class="form-label">First name</label>
+                <input type="text" class="form-control" name="first_name" id="first_name">
+            </div>
+            <div class="mb-3">
+                <label for="last_name" class="form-label">Last name</label>
+                <input type="text" class="form-control" name="last_name" id="last_name">
+            </div>
+            <div class="mb-3">
+                <label for="phoneNumber" class="form-label">Phone number</label>
+                <input type="tel" pattern="[0-9]{11}" maxlength="11" class="form-control" name="phoneNumber"
+                       id="phoneNumber" aria-describedby="numberHelp">
+                <div id="numberHelp" class="form-text">We'll never share your info with anyone else.</div>
+            </div>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" id="username">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">We'll never share your info with anyone else.</div>
+            </div>
+            <div class="mb-3">
+                <label for="password1" class="form-label">Password</label>
+                <input type="password" class="form-control" name="password1" id="password1">
+            </div>
+            <div class="mb-3">
+                <label for="password2" class="form-label">Repeat Password</label>
+                <input type="password" class="form-control" name="password2" id="password2">
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="privacyCheck">
+                <label class="form-check-label" for="privacyCheck">Check me out</label>
+            </div>
+            <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <a href="{% url 'users:login' %}">Already have an account? Login now!</a>
+                </div>
+            
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+
+
+    </script>
+{% endblock %}
