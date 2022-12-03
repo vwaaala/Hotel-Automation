@@ -5,4 +5,5 @@ from .views import *
 app_name = 'manager'
 urlpatterns = [
     path('', dashboard, name='dashboard'),
+    path('guests', guests, name='guests'),
 ]

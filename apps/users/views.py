@@ -13,7 +13,7 @@ def user_create(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        role = str(request.user.groups.all()[0])
+        role = f"{request.user.groups.all()[0]}"
         path = role + '/'
         return redirect(f"/{path}")
     else:
@@ -23,9 +23,9 @@ def user_login(request):
 
             if user is not None:
                 login(request, user)
-                role = str(request.user.groups.all()[0])
-                path = role = "/"
-                return redirect(f"/{path}")
+                role = f"{request.user.groups.all()[0]}"
+                path = role + "/"
+                return redirect(f"/manager")
         return render(request, 'users/login.html')
 
 
