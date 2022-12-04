@@ -1,0 +1,273 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form action="" method="POST">
+                                        {% csrf_token %}
+
+                                        <div class="form-group">
+                                            <label for="example-date-input" class="col-form-label">First
+                                                Date</label>
+                                            <div class="form-group">
+                                                <input class="form-control" type="date"
+                                                       value="{{ fd.year }}-{% if fd.month < 10 %}0{{ fd.month }}{% else %}{{ fd.month }}{% endif %}-{% if fd.day < 10 %}0{{ fd.day }}{% else %}{{ fd.day }}{% endif %}"
+                                                       name="f_day" id="f_day">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="example-date-input" class="col-form-label">Last Date</label>
+                                            <div class="">
+                                                <input class="form-control" type="date"
+                                                       value="{{ ld.year }}-{% if ld.month < 10 %}0{{ ld.month }}{% else %}{{ ld.month }}{% endif %}-{% if ld.day < 10 %}0{{ ld.day }}{% else %}{{ ld.day }}{% endif %}"
+                                                       name="l_day" id="l_day">
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning" name="filterDate">Filter
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form action="" method="POST">
+                                        {% csrf_token %}
+                                        <th>ID<input type="number" name="id" min="0" value="{{ id }}"
+                                                     class="form-control border border-secondary">
+                                        </th>
+                                        <th>Name<input type="text" name="name" value="{{ name }}"
+                                                       class="form-control border border-secondary"></th>
+                                        <th>Email<input type="text" name="email" value="{{ email }}"
+                                                        class="form-control border border-secondary"></th>
+                                        <th>Phone Number<input type="number" name="number" min="0" value="{{ number }}"
+                                                               class="form-control border border-secondary">
+                                        </th>
+                                        <th>
+                                            <button type="submit" name="filterGuest" class="btn btn-warning w-100">
+                                                Filter
+                                            </button>
+                                        </th>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th>Task</th>
+                            <th>Progress</th>
+                            <th style="width: 40px">Options</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for guest in guests %}
+                            <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ guest.user.first_name }} {{ guest.user.last_name }}</td>
+                            <td>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-danger">view</span></td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer clearfix">
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Top {{ top_guests_limit }} guests</h3>
+                    <div class="card-tools">
+                        <ul class="pagination pagination-sm float-right">
+                            <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th>Task</th>
+                            <th>Progress</th>
+                            <th style="width: 40px">Label</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for t in top_guests_list %}
+                         <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ t.user.first_name }} {{ t.user.last_name }}</td>
+                            <td>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-danger">view</span></td>
+                        </tr>
+                        {% endfor %}</tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6">
+            <div class="table-header row">
+
+                <div class="col-sm-12 col-md-12 col-lg-5 mb-4">
+                    <h2>Guest List</h2>
+                    <span class="text-muted">This list include guests who has a booking between these days</span>
+                </div>
+
+
+                <div class="col-sm-12 col-md-12 col-lg-7">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+
+                            <div class="form-group col-4">
+                                <label for="example-date-input" class="col-form-label">First Date</label>
+                                <div class="">
+                                    <input class="form-control" type="date"
+                                           value="{{ fd.year }}-{% if fd.month < 10 %}0{{ fd.month }}{% else %}{{ fd.month }}{% endif %}-{% if fd.day < 10 %}0{{ fd.day }}{% else %}{{ fd.day }}{% endif %}"
+                                           name="f_day" id="f_day">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-4">
+                                <label for="example-date-input" class="col-form-label">Last Date</label>
+                                <div class="">
+                                    <input class="form-control" type="date"
+                                           value="{{ ld.year }}-{% if ld.month < 10 %}0{{ ld.month }}{% else %}{{ ld.month }}{% endif %}-{% if ld.day < 10 %}0{{ ld.day }}{% else %}{{ ld.day }}{% endif %}"
+                                           name="l_day" id="l_day">
+                                </div>
+                            </div>
+
+                            <div class="col-4" style="margin-top:38px;">
+                                <button type="submit" class="btn btn-warning" name="filterDate">Filter</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+
+            </div>
+
+            <table class="table table-hover table-striped">
+                <thead class="bg-secondary rounded">
+                <tr>
+
+
+                </tr>
+
+
+                </thead>
+                <tbody>
+                {% for g in guests %}
+                    <tr>
+                        <td>{{ g.user.id }}</td>
+                        <td>{{ g.user.first_name }} {{ g.user.last_name }}</td>
+                        <td>{{ g.user.email }}</td>
+                        <td>{{ g.phoneNumber }}</td>
+
+                        {#                <td>{{g.numOfBooking}}</td>#}
+                        {#                <td>{{g.numOfDays}}</td>#}
+                        {#                <td>{{g.numOfLastBookingDays}}</td>#}
+
+                        <td><a href="#" class="btn btn-primary w-100">View&nbsp;Guest</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+        <div class="col-6">
+            <div class="top-10 pt-4 border-top border-secondary">
+                <div class="h3">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <input class="form-control border border-secondary" type="number" name="top" min="0"
+                               value="{{ topLimit }}"
+                               style="width: 65px;">
+                        People With The Most Booking
+                    </form>
+
+                </div>
+                <table class="table table-hover table-striped">
+                    <thead class="bg-secondary rounded">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Number of Bookings</th>
+                        <th>Total Day on Hotel</th>
+                        <th>Total Day for Last Booking</th>
+                        <th></th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+                    {% for g in topList %}
+                        <tr>
+                            <td>{{ g.user.id }}</td>
+                            <td>{{ g.user.first_name }} {{ g.user.last_name }}</td>
+                            <td>{{ g.user.email }}</td>
+                            <td>{{ g.phone_number }}</td>
+
+                            {#                    <td>{{g.numOfBooking}}</td>#}
+                            {#                    <td>{{g.numOfDays}}</td>#}
+                            {#                    <td>{{g.numOfLastBookingDays}}</td>#}
+
+                            <td><a href="#"
+                                   class="btn btn btn-primary w-100">View&nbsp;Guest</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
