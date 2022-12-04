@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count, Q
 from django.shortcuts import render
 
-from apps.guest.views import top_guests, booking_guest_filter_by_date
+from apps.guest.views import top_guests
 from apps.room.models import Booking
 from apps.users.models import Guest
 
@@ -32,15 +32,8 @@ def guests(request):
     role = str(request.user.groups.all()[0])
     path = role + "/"
 
-    topRange = Booking.objects.all().values("guest").annotate(
-        total=Count("guest")).order_by("-total")
-    topLimit = 10
-    topList = []
-    for t in topRange:
-        if len(topList) > 10:
-            break
-        else:
-            topList.append(Guest.objects.get(id=t.get("guest")))
+    top_guests_limit = 10
+    top_guests_list = top_guests(top_guests_limit)
 
     bookings = Booking.objects.all()
     fd = datetime.combine(date.today() - timedelta(days=30), datetime.min.time())
@@ -115,20 +108,12 @@ def guests(request):
             return render(request, path + "guests.html", context)
 
         if "top" in request.POST:
-            topRange = Booking.objects.all().values("guest").annotate(
-                total=Count("guest")).order_by("-total")
-            topList = []
-            topLimit = request.POST.get("top")
-            for t in topRange:
-                if len(topList) >= int(topLimit):
-                    break
-                else:
-                    topList.append(Guest.objects.get(id=t.get("guest")))
+            top_guests_list = top_guests(request.POST.get('top'))
             context = {
                 "role": role,
                 "guests": guests,
-                "topList": topList,
-                "topLimit": topLimit,
+                "top_guests_list": top_guests_list,
+                "top_guests_limit": top_guests_limit,
                 "fd": fd,
                 "ld": ld
             }
@@ -136,11 +121,9 @@ def guests(request):
     context = {
         "role": role,
         "guests": guests,
-        "topList": topList,
-        "topLimit": topLimit,
+        "top_guests_list": top_guests_list,
+        "top_guests_limit": top_guests_limit,
         "fd": fd,
         "ld": ld
     }
     return render(request, path + "guests.html", context)
-
-
