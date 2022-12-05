@@ -2,10 +2,11 @@ from datetime import datetime, timedelta, date
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count, Q
 from django.shortcuts import render
 
-from apps.guest.views import top_guests
+from apps.guest.views import top_guests, booking_guest_filter_by_date
 from apps.room.models import Booking
 from apps.users.models import Guest
 
@@ -35,25 +36,25 @@ def guests(request):
     top_guests_limit = 10
     top_guests_list = top_guests(top_guests_limit)
 
-    bookings = Booking.objects.all()
     fd = datetime.combine(date.today() - timedelta(days=30), datetime.min.time())
     ld = datetime.combine(date.today(), datetime.min.time())
-    guests = []
-
-    for b in bookings:
-        if b.end_date >= fd.date() and b.start_date <= ld.date():
-            if b.guest not in guests:
-                guests.append(b.guest)
+    all_guests = booking_guest_filter_by_date(fd, ld)
 
     if request.method == "POST":
         if "filterDate" in request.POST:
-
             if request.POST.get("f_day") == "" and request.POST.get("l_day") == "":
-                guests = Guest.objects.all()
-
+                all_guests = Guest.objects.all()
+                try:
+                    all_guests = Paginator(all_guests, 10)
+                except PageNotAnInteger:
+                    all_guests = all_guests.page(1)
+                except EmptyPage:
+                    all_guests = all_guests.page(all_guests.num_pages)
                 context = {
                     "role": role,
-                    "guests": guests,
+                    "guests": all_guests,
+                    "top_guests_list": top_guests_list,
+                    "top_guests_limit": top_guests_limit,
                     "fd": "",
                     "ld": ""
                 }
@@ -71,35 +72,39 @@ def guests(request):
                 ld = request.POST.get("l_day")
                 ld = datetime.strptime(ld, '%Y-%m-%d')
 
-            for b in bookings:
-                if b.end_date >= fd.date() and b.start_date <= ld.date():
-                    if b.guest not in guests:
-                        guests.append(b.guest)
+            all_guests = booking_guest_filter_by_date(fd, ld)
 
         if "filterGuest" in request.POST:
-            guests = Guest.objects.all()
+            all_guests = Guest.objects.all()
             users = User.objects.all()
-            if (request.POST.get("id") != ""):
+            if request.POST.get("id") != "":
                 users = users.filter(
                     id__contains=request.POST.get("id"))
-                guests = guests.filter(user__in=users)
+                all_guests = all_guests.filter(user__in=users)
 
-            if (request.POST.get("name") != ""):
+            if request.POST.get("name") != "":
                 users = users.filter(
                     Q(first_name__contains=request.POST.get("name")) | Q(last_name__contains=request.POST.get("name")))
-                guests = guests.filter(user__in=users)
+                all_guests = all_guests.filter(user__in=users)
 
-            if (request.POST.get("email") != ""):
+            if request.POST.get("email") != "":
                 users = users.filter(email__contains=request.POST.get("email"))
-                guests = guests.filter(user__in=users)
+                all_guests = all_guests.filter(user__in=users)
 
-            if (request.POST.get("number") != ""):
-                guests = guests.filter(
+            if request.POST.get("number") != "":
+                all_guests = all_guests.filter(
                     phoneNumber__contains=request.POST.get("number"))
-
+            try:
+                all_guests = Paginator(all_guests, 10)
+            except PageNotAnInteger:
+                all_guests = all_guests.page(1)
+            except EmptyPage:
+                all_guests = all_guests.page(all_guests.num_pages)
             context = {
                 "role": role,
-                "guests": guests,
+                "guests": all_guests,
+                "top_guests_list": top_guests_list,
+                "top_guests_limit": top_guests_limit,
                 "id": request.POST.get("id"),
                 "name": request.POST.get("name"),
                 "email": request.POST.get("email"),
@@ -108,22 +113,48 @@ def guests(request):
             return render(request, path + "guests.html", context)
 
         if "top" in request.POST:
-            top_guests_list = top_guests(request.POST.get('top'))
-            context = {
-                "role": role,
-                "guests": guests,
-                "top_guests_list": top_guests_list,
-                "top_guests_limit": top_guests_limit,
-                "fd": fd,
-                "ld": ld
-            }
+            if request.POST.get('top') == '':
+                context = {
+                    "role": role,
+                    "guests": all_guests,
+                    "top_guests_list": top_guests_list,
+                    "top_guests_limit": top_guests_limit,
+                    "fd": fd,
+                    "ld": ld
+                }
+            else:
+                top_guests_list = top_guests(request.POST.get('top'))
+                context = {
+                    "role": role,
+                    "guests": all_guests,
+                    "top_guests_list": top_guests_list,
+                    "top_guests_limit": top_guests_limit,
+                    "fd": fd,
+                    "ld": ld
+                }
             return render(request, path + "guests.html", context)
+    
+    try:
+        all_guests = Paginator(all_guests, 10)
+    except PageNotAnInteger:
+        all_guests = all_guests.page(1)
+    except EmptyPage:
+        all_guests = all_guests.page(all_guests.num_pages)
     context = {
         "role": role,
-        "guests": guests,
+        "all_guests": all_guests,
         "top_guests_list": top_guests_list,
         "top_guests_limit": top_guests_limit,
         "fd": fd,
         "ld": ld
     }
     return render(request, path + "guests.html", context)
+
+
+@login_required()
+def guests_view(request):
+    guest_list = Guest.objects.all()
+    context = {
+        'guest_list' : guest_list
+    }
+    return render(request, 'manager/guests_view.html', context)

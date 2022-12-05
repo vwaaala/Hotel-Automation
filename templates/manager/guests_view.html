@@ -1,0 +1,49 @@
+{% extends 'layouts/master.admin.html' %}
+{% load static %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+{% endblock %}
+{% block title %}
+    Guest list
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Number of Booking</th>
+                        <th>TB Days</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for guest in guest_list %}
+                        <tr>
+                            <td>{{ guest.user.first_name }} {{ guest.user.last_name }}</td>
+                            <td>{{ guest.user.email }}</td>
+                            <td>{{ guest.phone_number }}</td>
+                            <td>{{ guest.num_of_booking }}</td>
+                            <td>{{ guest.num_of_total_booking_days }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable()
+        })
+    </script>
+{% endblock %}
