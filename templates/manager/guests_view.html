@@ -15,34 +15,30 @@
 {% endblock %}
 {% block content %}
     <div class="container">
-        <div class="card">
-            <div class="card-body">
-                <table id="example" class="table-responsive table-striped table-bordered" style="width:100%">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>TB</th>
-                        <th>TB Days</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for guest in guest_list %}
-                        <tr>
-                            <td>{{ guest.user.first_name }} {{ guest.user.last_name }}</td>
-                            <td>{{ guest.user.email }}</td>
-                            <td>{{ guest.phone_number }}</td>
-                            <td>{{ guest.num_of_booking }}</td>
-                            <td>{{ guest.num_of_total_booking_days }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                    <tfoot>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
+        <table id="example" class="table table-striped table-bordered" style="width:75%">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>TB</th>
+                <th>TB Days</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for guest in guest_list %}
+                <tr>
+                    <td>{{ guest.user.first_name }} {{ guest.user.last_name }}</td>
+                    <td>{{ guest.user.email }}</td>
+                    <td>{{ guest.phone_number }}</td>
+                    <td>{{ guest.num_of_booking }}</td>
+                    <td>{{ guest.num_of_total_booking_days }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
     </div>
 {% endblock %}
 {% block script %}
@@ -52,7 +48,7 @@
     <script src="{% static 'plugins/datatables-buttons/js/buttons.html5.js' %}"></script>
     <script src="{% static 'plugins/datatables-buttons/js/buttons.print.js' %}"></script>
     <script src="{% static 'plugins/datatables-fixedheader/js/dataTables.fixedHeader.min.js' %}"></script>
-    <script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.js' %}"></script>
+    <script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
     <script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.js' %}"></script>
     <script src="{% static 'plugins/jszip/jszip.js' %}"></script>
     <script src="{% static 'plugins/pdfmake/pdfmake.js' %}"></script>
@@ -65,7 +61,7 @@
                 paging: true,
                 pageLength: 10,
                 lengthChange: true,
-                autoWidth: false,
+                autoWidth: true,
                 searching: true,
                 bInfo: true,
                 bSort: true,
@@ -183,10 +179,7 @@
                         }
                     }
                 ]
-
             })
-
-            new $.fn.dataTable.FixedHeader(table);
         })
     </script>
 {% endblock %}
