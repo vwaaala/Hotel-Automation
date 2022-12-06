@@ -2,6 +2,13 @@
 {% load static %}
 {% block style %}
     <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'plugins/datatables-fixedheader/css/fixedHeader.bootstrap4.min.css' %}"
+    >
+    <link rel="stylesheet"
+          href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}"
+    >
 {% endblock %}
 {% block title %}
     Guest list
@@ -10,13 +17,13 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                <table id="example" class="table-responsive table-striped table-bordered" style="width:100%">
                     <thead>
                     <tr>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
-                        <th>Number of Booking</th>
+                        <th>TB</th>
                         <th>TB Days</th>
                     </tr>
                     </thead>
@@ -41,9 +48,145 @@
 {% block script %}
     <script src="{% static 'plugins/datatables/jquery.dataTables.js' %}"></script>
     <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.js' %}"></script>
+    <script src="{% static 'plugins/datatables-buttons/js/buttons.html5.js' %}"></script>
+    <script src="{% static 'plugins/datatables-buttons/js/buttons.print.js' %}"></script>
+    <script src="{% static 'plugins/datatables-fixedheader/js/dataTables.fixedHeader.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.js' %}"></script>
+    <script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.js' %}"></script>
+    <script src="{% static 'plugins/jszip/jszip.js' %}"></script>
+    <script src="{% static 'plugins/pdfmake/pdfmake.js' %}"></script>
+    <script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
     <script>
         $(document).ready(function () {
-            $('#example').DataTable()
+            $('#example thead tr').clone(true).addClass('filters').appendTo('#example thead')
+
+            const table = $('#example').DataTable({
+                paging: true,
+                pageLength: 10,
+                lengthChange: true,
+                autoWidth: false,
+                searching: true,
+                bInfo: true,
+                bSort: true,
+                // Filter in column level
+                orderCellsTop: true,
+                responsive: true,
+                initComplete: function () {
+                    var api = this.api();
+
+                    // For each column
+                    api
+                        .columns()
+                        .eq(0)
+                        .each(function (colIdx) {
+                            // Set the header cell to contain the input element
+                            var cell = $('.filters th').eq(
+                                $(api.column(colIdx).header()).index()
+                            );
+                            var title = $(cell).text();
+                            $(cell).html('<input type="text" placeholder="' + title + '" />');
+
+                            // On every keypress in this input
+                            $(
+                                'input',
+                                $('.filters th').eq($(api.column(colIdx).header()).index())
+                            )
+                                .off('keyup change')
+                                .on('change', function (e) {
+                                    // Get the search value
+                                    $(this).attr('title', $(this).val());
+                                    var regexr = '({search})'; //$(this).parents('th').find('select').val();
+
+                                    var cursorPosition = this.selectionStart;
+                                    // Search the column for that value
+                                    api
+                                        .column(colIdx)
+                                        .search(
+                                            this.value != ''
+                                                ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                                : '',
+                                            this.value != '',
+                                            this.value == ''
+                                        )
+                                        .draw();
+                                })
+                                .on('keyup', function (e) {
+                                    e.stopPropagation();
+
+                                    $(this).trigger('change');
+                                    $(this)
+                                        .focus()[0]
+                                        .setSelectionRange(cursorPosition, cursorPosition);
+                                });
+                        });
+                },
+                // Extra buttons - Copy, PDF, Excel, Print
+                dom: 'lBfrtip',
+                buttons: [
+                    // Copy button
+                    {
+                        extend: 'copy',
+                        text: '<i class="fas fa-clone"></i>',
+                        className: 'btn btn-info',
+                        titleAttr: 'Copy',
+                        // Columns to copy
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4],
+                        }
+                    },
+                    // Excel button
+                    {
+                        extend: 'excel',
+                        text: '<i class="fas fa-file-excel"></i>',
+                        className: 'btn btn-info',
+                        titleAttr: 'Excel',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4],
+                        }
+                    },
+                    // Print button
+                    {
+                        extend: 'print',
+                        text: '<i class="fas fa-print"></i>',
+                        className: 'btn btn-info',
+                        titleAttr: 'Print',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4],
+                        },
+                        // Customize pdf file
+                        customize: function (win) {
+                            $(win.document.body).css('font-size', '10pt')
+                            $(win.document.body).find('table').addClass('compact').css('font-size', 'inherit')
+                        }
+                    },
+                    // PDF button
+                    {
+                        extend: 'pdf',
+                        text: '<i class="fas fa-file-pdf"></i>',
+                        className: 'btn btn-info',
+                        titleAttr: 'PDF',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4]
+                        },
+                        tableHeader: {
+                            alignment: 'center'
+                        },
+                        // Customize pdf file
+                        customize: function (doc) {
+                            doc.styles.tableHeader.alignment = 'center'
+                            doc.styles.tableHeader.fontSize = 7
+                            doc.styles.tableBodyOdd.alignment = 'center'
+                            doc.styles.tableBodyEven.alignment = 'center'
+                            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*')
+                                .split('')
+                        }
+                    }
+                ]
+
+            })
+
+            new $.fn.dataTable.FixedHeader(table);
         })
     </script>
 {% endblock %}
