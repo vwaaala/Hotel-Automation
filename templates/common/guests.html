@@ -17,8 +17,8 @@
                                                 Date</label>
                                             <div class="form-group">
                                                 <input class="form-control" type="date"
-                                                       value="{{ fd.year }}-{% if fd.month < 10 %}0{{ fd.month }}{% else %}{{ fd.month }}{% endif %}-{% if fd.day < 10 %}0{{ fd.day }}{% else %}{{ fd.day }}{% endif %}"
-                                                       name="f_day" id="f_day">
+                                                    value="{{ fd.year }}-{% if fd.month < 10 %}0{{ fd.month }}{% else %}{{ fd.month }}{% endif %}-{% if fd.day < 10 %}0{{ fd.day }}{% else %}{{ fd.day }}{% endif %}"
+                                                    name="f_day" id="f_day">
                                             </div>
                                         </div>
 
@@ -26,8 +26,8 @@
                                             <label for="example-date-input" class="col-form-label">Last Date</label>
                                             <div class="">
                                                 <input class="form-control" type="date"
-                                                       value="{{ ld.year }}-{% if ld.month < 10 %}0{{ ld.month }}{% else %}{{ ld.month }}{% endif %}-{% if ld.day < 10 %}0{{ ld.day }}{% else %}{{ ld.day }}{% endif %}"
-                                                       name="l_day" id="l_day">
+                                                    value="{{ ld.year }}-{% if ld.month < 10 %}0{{ ld.month }}{% else %}{{ ld.month }}{% endif %}-{% if ld.day < 10 %}0{{ ld.day }}{% else %}{{ ld.day }}{% endif %}"
+                                                    name="l_day" id="l_day">
                                             </div>
                                         </div>
                                     </div>
@@ -44,14 +44,14 @@
                                     <form action="" method="POST">
                                         {% csrf_token %}
                                         <th>ID<input type="number" name="id" min="0" value="{{ id }}"
-                                                     class="form-control border border-secondary">
+                                                class="form-control border border-secondary">
                                         </th>
                                         <th>Name<input type="text" name="name" value="{{ name }}"
-                                                       class="form-control border border-secondary"></th>
+                                                class="form-control border border-secondary"></th>
                                         <th>Email<input type="text" name="email" value="{{ email }}"
-                                                        class="form-control border border-secondary"></th>
+                                                class="form-control border border-secondary"></th>
                                         <th>Phone Number<input type="number" name="number" min="0" value="{{ number }}"
-                                                               class="form-control border border-secondary">
+                                                class="form-control border border-secondary">
                                         </th>
                                         <th>
                                             <button type="submit" name="filterGuest" class="btn btn-warning w-100 mt-2">
@@ -66,15 +66,15 @@
 
                     <table class="table table-bordered">
                         <thead>
-                        <tr>
-                            <th style="width: 10px">#</th>
-                            <th>Task</th>
-                            <th>Progress</th>
-                            <th style="width: 40px">Options</th>
-                        </tr>
+                            <tr>
+                                <th style="width: 10px">#</th>
+                                <th>Task</th>
+                                <th>Progress</th>
+                                <th style="width: 40px">Options</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {% for guest in all_guests %}
+                            {% for guest in all_guests %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ guest.user.first_name }} {{ guest.user.last_name }}</td>
@@ -85,7 +85,7 @@
                                 </td>
                                 <td><span class="badge bg-danger">view</span></td>
                             </tr>
-                        {% endfor %}
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -93,14 +93,14 @@
                 <div class="card-footer clearfix">
                     <ul class="pagination pagination-sm m-0 float-right">
                         {% if all_guests.has_previous %}
-                            <li class="page-item"><a class="page-link" href="{% url 'manager:guests' %}">&laquo;</a>
-                            </li>
+                        <li class="page-item"><a class="page-link" href="{% url 'manager:guests' %}">&laquo;</a>
+                        </li>
                         {% endif %}
                         <li class="page-item"><a class="page-link" href="#">1</a></li>
                         <li class="page-item"><a class="page-link" href="#">2</a></li>
                         <li class="page-item"><a class="page-link" href="#">3</a></li>
                         {% if all_guests.has_next %}
-                            <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                        <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -109,22 +109,22 @@
         </div>
         <!-- /.col -->
         <div class="col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <a href="#" class="btn btn-app bg-gradient-gray-dark">
-                    <i class="fas fa-edit"></i>
-                    Add New Guest
-                </a>
-                <a href="#" class="btn btn-app bg-gradient-danger">
-                    <i class="fas fa-table"></i>
-                    All Guest
-                </a>
-                <a href="#" class="btn btn-app bg-gradient-primary">
-                    <i class="fas fa-percentage"></i>
-                    Top Guest
-                </a>
+            <div class="card">
+                <div class="card-body">
+                    <a href="#" class="btn btn-app bg-gradient-gray-dark">
+                        <i class="fas fa-edit"></i>
+                        Add New Guest
+                    </a>
+                    <a href="#" class="btn btn-app bg-gradient-danger">
+                        <i class="fas fa-table"></i>
+                        All Guest
+                    </a>
+                    <a href="#" class="btn btn-app bg-gradient-primary">
+                        <i class="fas fa-percentage"></i>
+                        Top Guest
+                    </a>
+                </div>
             </div>
-        </div>
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Top {{ top_guests_limit }} guests</h3>
@@ -142,15 +142,15 @@
                 <div class="card-body p-0">
                     <table class="table">
                         <thead>
-                        <tr>
-                            <th style="width: 10px">#</th>
-                            <th>Task</th>
-                            <th>Progress</th>
-                            <th style="width: 40px">Label</th>
-                        </tr>
+                            <tr>
+                                <th style="width: 10px">#</th>
+                                <th>Task</th>
+                                <th>Progress</th>
+                                <th style="width: 40px">Label</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {% for t in top_guests_list %}
+                            {% for t in top_guests_list %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ t.user.first_name }} {{ t.user.last_name }}</td>
@@ -161,7 +161,8 @@
                                 </td>
                                 <td><span class="badge bg-danger">view</span></td>
                             </tr>
-                        {% endfor %}</tbody>
+                            {% endfor %}
+                        </tbody>
                     </table>
                 </div>
                 <!-- /.card-body -->
